@@ -3,8 +3,8 @@ interface IHero {
   name: string;
   description: string;
   thumbnail: IMarvelImage;
-  comics: IComicList;
-  stories: IStoryList;
+  comics?: IComicList;
+  stories?: IStoryList;
 }
 
 interface IMarvelList {

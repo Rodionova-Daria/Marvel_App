@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import axios, { AxiosResponse } from 'axios';
-import { Link } from 'react-router-dom';
 import { IHero } from '../interfaces/Ihero';
+import { Header } from './Header';
+import { Search } from './Search';
+import { HeroList } from './HeroList';
+import { http } from './axois';
 
 interface IProps {
   props: string;
@@ -10,12 +12,7 @@ interface IProps {
 
 interface IState {
   heroes: IHero[];
-  param:
-    | string
-    | {
-        (regexp: string | RegExp): number;
-        (searcher: { [Symbol.search](string: string): number }): number;
-      };
+  baseURL: string;
 }
 
 class MarvelHome extends Component<IProps, IState> {
@@ -24,37 +21,29 @@ class MarvelHome extends Component<IProps, IState> {
 
     this.state = {
       heroes: [],
-      param: this.props.location.search ? this.props.location.search : '?',
+      baseURL: 'https://gateway.marvel.com',
     };
   }
 
-  componentDidMount(): void {
-    axios
-      .get<IHero[]>(
-        `https://gateway.marvel.com:443/v1/public/characters${this.state.param}&apikey=c654719a1f9aca8fa22982b328b85869`
-      )
-      .then((res: AxiosResponse) => {
-        return this.setState({ heroes: res.data.data.results });
-      })
-      .catch((err) => console.log(err));
+  async componentDidMount(): Promise<void> {
+    try {
+      const res = await http<IHero[]>(
+        `${this.state.baseURL}:443/v1/public/characters${
+          this.props.location.search || '?'
+        }&apikey=${process.env.REACT_APP_API_KEY}`
+      );
+      this.setState({ heroes: res.data.data.results });
+    } catch (res) {
+      console.log('Error');
+    }
   }
 
   render(): React.ReactNode {
-    const { heroes } = this.state;
-    console.log(heroes);
     return (
       <div>
-        <h1>Marvel Home</h1>
-        <div>
-          {heroes.length
-            ? heroes.map((hero) => (
-                <div key={hero.id}>
-                  {' '}
-                  <Link to={`/commics/${hero.id}`}> {hero.name} </Link>
-                </div>
-              ))
-            : null}
-        </div>
+        <Header />
+        <Search />
+        <HeroList heroes={this.state.heroes} />;
       </div>
     );
   }

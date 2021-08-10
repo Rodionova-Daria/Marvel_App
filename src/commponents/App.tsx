@@ -7,15 +7,15 @@ import MarvelHome from './MarvelHome';
 class App extends Component {
   render(): React.ReactNode {
     return (
-      <Router>
-        <div>
+      <React.Fragment>
+        <Router>
           <Switch>
             <Route path="/" exact component={MarvelHome} />
             <Route path="/commics/:id" component={Commics} />
             <Route component={PageNotFound} />
           </Switch>
-        </div>
-      </Router>
+        </Router>
+      </React.Fragment>
     );
   }
 }
