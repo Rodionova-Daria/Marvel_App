@@ -1,4 +1,5 @@
 import { Card, CardContent, makeStyles, Typography } from '@material-ui/core';
+
 import React from 'react';
 
 interface IProps {
@@ -14,6 +15,14 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
     marginBottom: '20px',
   },
+  descript: {
+    height: '250px',
+    overflow: 'hidden',
+    overflowY: 'auto',
+    borderRadius: '10%',
+    borderBottom: '1px solid gray',
+    padding: '20px',
+  },
 }));
 
 const CommicsCard: React.FC<IProps> = (props: IProps) => {
@@ -24,7 +33,7 @@ const CommicsCard: React.FC<IProps> = (props: IProps) => {
       <img src={thumbnail} alt="hero" />
       <CardContent>
         <Typography variant="h5">{title}</Typography>
-        <Typography>{description}</Typography>
+        <Typography className={classes.descript}>{description}</Typography>
       </CardContent>
     </Card>
   );

@@ -11,6 +11,7 @@ interface ICommicsState {
   commics: ICommics[];
   heroID: string;
   baseURL: string;
+  loading: boolean;
 }
 
 class Commics extends Component<ICommicsProps, ICommicsState> {
@@ -21,6 +22,7 @@ class Commics extends Component<ICommicsProps, ICommicsState> {
       commics: [],
       heroID: props.match.params.id,
       baseURL: 'https://gateway.marvel.com',
+      loading: false,
     };
   }
 
@@ -30,6 +32,7 @@ class Commics extends Component<ICommicsProps, ICommicsState> {
         `${this.state.baseURL}:443/v1/public/characters/${this.state.heroID}/comics?apikey=${process.env.REACT_APP_API_KEY}`
       );
       this.setState({ commics: res.data.data.results });
+      this.setState({ loading: true });
     } catch (res) {
       console.log('Error');
     }
@@ -39,7 +42,7 @@ class Commics extends Component<ICommicsProps, ICommicsState> {
     return (
       <div>
         <Header />
-        <CommicsList commics={this.state.commics} />
+        <CommicsList commics={this.state.commics} loading={this.state.loading} />
       </div>
     );
   }
