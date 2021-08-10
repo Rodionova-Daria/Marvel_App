@@ -1,6 +1,7 @@
 import { Card, CardContent, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import '../css/style.css';
 
 interface IProps {
   id: number;
@@ -22,10 +23,14 @@ const HeroCard: React.FC<IProps> = (props: IProps) => {
   const { name, description, thumbnail, id } = props;
   return (
     <Card className={classes.card}>
-      <img src={thumbnail} alt="hero" />
+      <Link to={`/commics/${id}`} className="link">
+        <img src={thumbnail} alt="hero" className="thumbnail" />
+      </Link>
       <CardContent>
         <Typography variant="h5">
-          <Link to={`/commics/${id}`}>{name}</Link>
+          <Link to={`/commics/${id}`} className="link">
+            {name}
+          </Link>
         </Typography>
         <Typography>{description}</Typography>
       </CardContent>

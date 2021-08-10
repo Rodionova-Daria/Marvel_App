@@ -13,6 +13,8 @@ interface IProps {
 interface IState {
   heroes: IHero[];
   baseURL: string;
+  searchField: string;
+  filterHeroes: IHero[];
 }
 
 class MarvelHome extends Component<IProps, IState> {
@@ -22,7 +24,11 @@ class MarvelHome extends Component<IProps, IState> {
     this.state = {
       heroes: [],
       baseURL: 'https://gateway.marvel.com',
+      searchField: '',
+      filterHeroes: [],
     };
+
+    this.onSearchChange = this.onSearchChange.bind(this);
   }
 
   async componentDidMount(): Promise<void> {
@@ -32,18 +38,26 @@ class MarvelHome extends Component<IProps, IState> {
           this.props.location.search || '?'
         }&apikey=${process.env.REACT_APP_API_KEY}`
       );
-      this.setState({ heroes: res.data.data.results });
+      this.setState({ heroes: res.data.data.results, filterHeroes: res.data.data.results });
     } catch (res) {
       console.log('Error');
     }
+  }
+
+  onSearchChange(e: React.ChangeEvent<HTMLInputElement>): void {
+    this.setState({ searchField: e.target.value });
+    const filterHeroes = this.state.heroes.filter((hero) => {
+      return hero.name.includes(this.state.searchField);
+    });
+    this.setState({ filterHeroes: filterHeroes });
   }
 
   render(): React.ReactNode {
     return (
       <div>
         <Header />
-        <Search />
-        <HeroList heroes={this.state.heroes} />;
+        <Search searchChange={this.onSearchChange} />
+        <HeroList heroes={this.state.filterHeroes} />;
       </div>
     );
   }
