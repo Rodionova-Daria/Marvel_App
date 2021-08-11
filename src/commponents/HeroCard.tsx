@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const HeroCard: React.FC<IProps> = (props: IProps) => {
+export const HeroCard: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
   const { name, description, thumbnail, id } = props;
   return (
@@ -37,5 +37,3 @@ const HeroCard: React.FC<IProps> = (props: IProps) => {
     </Card>
   );
 };
-
-export { HeroCard };

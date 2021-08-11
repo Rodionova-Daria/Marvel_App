@@ -4,7 +4,6 @@ interface IHero {
   description: string;
   thumbnail: IMarvelImage;
   comics?: IComicList;
-  stories?: IStoryList;
 }
 
 interface IMarvelList {
@@ -27,20 +26,4 @@ interface IComicList extends IMarvelList {
   items: IMarvelSummary;
 }
 
-interface IStoryList extends IMarvelList {
-  items: IStorySummary;
-}
-
-interface IStorySummary extends IMarvelSummary {
-  type: string;
-}
-
-export type {
-  IHero,
-  IMarvelList,
-  IMarvelSummary,
-  IMarvelImage,
-  IComicList,
-  IStoryList,
-  IStorySummary,
-};
+export type { IHero, IMarvelList, IMarvelSummary, IMarvelImage, IComicList };

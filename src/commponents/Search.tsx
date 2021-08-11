@@ -7,21 +7,18 @@ interface IProps {
   searchField: string;
 }
 
-const Search: React.FC<IProps> = (props: IProps) => {
+export const Search: React.FC<IProps> = (props: IProps) => {
+  const path = `/?name=${props.searchField}`;
   return (
     <section className="search">
       <div className="container">
         <div className="search-bar">
           <input type="search" placeholder="Enter the hero" onChange={props.searchChange} />
-          <Link to={`/?name=${props.searchField}`} className="link">
-            <a href="#" className="btn search-btn">
-              Search
-            </a>
+          <Link to={path} className="btn search-btn">
+            Search
           </Link>
         </div>
       </div>
     </section>
   );
 };
-
-export { Search };

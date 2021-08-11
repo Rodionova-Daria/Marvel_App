@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { ICommics } from '../interfaces/Icommics';
 import { Header } from './Header';
-import { http } from './axois';
+import { getCommics } from './getCommics';
 import { CommicsList } from './CommicsList';
 
 type ICommicsProps = RouteComponentProps<{ id: string }>;
@@ -10,7 +10,6 @@ type ICommicsProps = RouteComponentProps<{ id: string }>;
 interface ICommicsState {
   commics: ICommics[];
   heroID: string;
-  baseURL: string;
   loading: boolean;
 }
 
@@ -21,20 +20,16 @@ class Commics extends Component<ICommicsProps, ICommicsState> {
     this.state = {
       commics: [],
       heroID: props.match.params.id,
-      baseURL: 'https://gateway.marvel.com',
-      loading: false,
+      loading: true,
     };
   }
 
   async componentDidMount(): Promise<void> {
     try {
-      const res = await http<ICommics[]>(
-        `${this.state.baseURL}:443/v1/public/characters/${this.state.heroID}/comics?apikey=${process.env.REACT_APP_API_KEY}`
-      );
-      this.setState({ commics: res.data.data.results });
-      this.setState({ loading: true });
-    } catch (res) {
-      console.log('Error');
+      const res = await getCommics(this.state.heroID);
+      this.setState({ commics: res.data.data.results, loading: false });
+    } catch (err) {
+      console.log(`Request was failed ${err}`);
     }
   }
 
@@ -47,5 +42,4 @@ class Commics extends Component<ICommicsProps, ICommicsState> {
     );
   }
 }
-
 export { Commics };

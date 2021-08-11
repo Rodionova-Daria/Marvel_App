@@ -3,20 +3,16 @@ import { IHero } from '../interfaces/Ihero';
 import { Header } from './Header';
 import { Search } from './Search';
 import { HeroList } from './HeroList';
-import { http } from './axois';
+import { getHeroes } from './getHeroes';
 import Backdrop from '@material-ui/core/Backdrop';
 import { CircularProgress } from '@material-ui/core';
+import { RouteComponentProps } from 'react-router-dom';
 
-interface IProps {
-  props: string;
-  location: string;
-}
+type IProps = RouteComponentProps<{ location: string }>;
 
 interface IState {
   heroes: IHero[];
-  baseURL: string;
   searchField: string;
-  filterHeroes: IHero[];
   loading: boolean;
 }
 
@@ -26,45 +22,44 @@ class MarvelHome extends Component<IProps, IState> {
 
     this.state = {
       heroes: [],
-      baseURL: 'https://gateway.marvel.com',
       searchField: '',
-      filterHeroes: [],
-      loading: false,
+      loading: true,
     };
 
     this.onSearchChange = this.onSearchChange.bind(this);
+    this.filterHeroes = this.filterHeroes.bind(this);
   }
 
   async componentDidMount(): Promise<void> {
     try {
-      const res = await http<IHero[]>(
-        `${this.state.baseURL}:443/v1/public/characters${
-          this.props.location.search || '?'
-        }&apikey=${process.env.REACT_APP_API_KEY}`
-      );
-      this.setState({ heroes: res.data.data.results, filterHeroes: res.data.data.results });
-      this.setState({ loading: true });
-    } catch (res) {
-      console.log('Error');
+      const res = await getHeroes(this.props.location.search);
+      this.setState({
+        heroes: res.data.data.results,
+        loading: false,
+      });
+    } catch (err) {
+      console.log(`Request was failed ${err}`);
     }
   }
 
   onSearchChange(e: React.ChangeEvent<HTMLInputElement>): void {
     this.setState({ searchField: e.target.value });
-    const filterHeroes = this.state.heroes.filter((hero) => {
-      return hero.name.toLowerCase().includes(this.state.searchField.toLowerCase());
-    });
-    this.setState({ filterHeroes: filterHeroes });
+  }
+
+  filterHeroes(): IHero[] {
+    const searchField = this.state.searchField.toLowerCase();
+    return this.state.heroes.filter((hero) => hero.name.toLowerCase().includes(searchField));
   }
 
   render(): React.ReactNode {
+    const filterHeroes = this.filterHeroes();
     return (
       <div>
         <Header />
-        {this.state.loading ? (
+        {!this.state.loading ? (
           <>
             <Search searchChange={this.onSearchChange} searchField={this.state.searchField} />
-            <HeroList heroes={this.state.filterHeroes} />
+            <HeroList heroes={filterHeroes} />
           </>
         ) : (
           <Backdrop open invisible={true}>

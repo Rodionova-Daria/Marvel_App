@@ -16,6 +16,7 @@ interface IProps {
 // }
 
 export const HeroList: React.FC<IProps> = ({ heroes }: IProps) => {
+  const size = '/portrait_fantastic.';
   return (
     <section className="heroes-section">
       <div className="container">
@@ -27,9 +28,7 @@ export const HeroList: React.FC<IProps> = ({ heroes }: IProps) => {
                   id={hero.id}
                   name={hero.name}
                   description={hero.description}
-                  thumbnail={
-                    hero.thumbnail.path + '/portrait_fantastic.' + hero.thumbnail.extension
-                  }
+                  thumbnail={`${hero.thumbnail.path}${size}${hero.thumbnail.extension}`}
                 />
               ))
             : null}
