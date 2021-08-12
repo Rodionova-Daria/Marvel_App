@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { ICommics } from '../interfaces/Icommics';
 import { Header } from './Header';
-import { getCommics } from './getCommics';
+import { getCommics } from './api';
 import { CommicsList } from './CommicsList';
 
 type ICommicsProps = RouteComponentProps<{ id: string }>;

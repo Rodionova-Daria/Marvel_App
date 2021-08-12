@@ -3,7 +3,7 @@ import { IHero } from '../interfaces/Ihero';
 import { Header } from './Header';
 import { Search } from './Search';
 import { HeroList } from './HeroList';
-import { getHeroes } from './getHeroes';
+import { getHeroes } from './api';
 import Backdrop from '@material-ui/core/Backdrop';
 import { CircularProgress } from '@material-ui/core';
 import { RouteComponentProps } from 'react-router-dom';
