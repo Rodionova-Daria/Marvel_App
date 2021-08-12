@@ -17,7 +17,6 @@ interface IState {
   loading: boolean;
   currentPage: number;
   heroesPerPage: number;
-  hero: IHero[];
 }
 
 class MarvelHome extends Component<IProps, IState> {
@@ -30,12 +29,12 @@ class MarvelHome extends Component<IProps, IState> {
       loading: true,
       currentPage: 1,
       heroesPerPage: 4,
-      hero: [],
     };
 
     this.onSearchChange = this.onSearchChange.bind(this);
     this.filterHeroes = this.filterHeroes.bind(this);
     this.paginationHandleChange = this.paginationHandleChange.bind(this);
+    this.sortByCommics = this.sortByCommics.bind(this);
   }
 
   async componentDidMount(): Promise<void> {
@@ -54,29 +53,41 @@ class MarvelHome extends Component<IProps, IState> {
     this.setState({ searchField: e.target.value });
   }
 
-  filterHeroes(currentPosts: IHero[]): IHero[] {
+  filterHeroes(posts: IHero[]): IHero[] {
     const searchField = this.state.searchField.toLowerCase();
-    return currentPosts.filter((hero) => hero.name.toLowerCase().includes(searchField));
+    return posts.filter((hero) => hero.name.toLowerCase().includes(searchField));
   }
 
   paginationHandleChange(event: React.ChangeEvent<unknown>, page: number): void {
     this.setState({ currentPage: page });
   }
 
+  sortByCommics(): void {
+    const sortHeroes = this.state.heroes.sort(
+      (first: IHero, last: IHero) => last.comics.returned - first.comics.returned
+    );
+    this.setState({ heroes: sortHeroes });
+  }
+
+  checkOnPosts(currentPosts: IHero[]): IHero[] {
+    if (this.state.searchField === '') {
+      return this.filterHeroes(currentPosts);
+    } else {
+      return this.filterHeroes(this.state.heroes);
+    }
+  }
+
   render(): React.ReactNode {
     const indexOfLastPost = this.state.currentPage * this.state.heroesPerPage;
     const indexOfFirstPost = indexOfLastPost - this.state.heroesPerPage;
     const currentPosts = this.state.heroes.slice(indexOfFirstPost, indexOfLastPost);
-    const filterHeroes =
-      this.state.searchField === ''
-        ? this.filterHeroes(currentPosts)
-        : this.filterHeroes(this.state.heroes);
+    const filterHeroes = this.checkOnPosts(currentPosts);
     return (
       <div>
         <Header />
         {!this.state.loading ? (
           <>
-            <Search searchChange={this.onSearchChange} searchField={this.state.searchField} />
+            <Search searchChange={this.onSearchChange} OrderButton={this.sortByCommics} />
             <HeroList heroes={filterHeroes} />
             <Paginations
               postsPerPage={this.state.heroesPerPage}

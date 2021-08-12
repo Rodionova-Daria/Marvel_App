@@ -28,7 +28,6 @@ const useStyles = makeStyles(() => ({
 const CommicsCard: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
   const { description, thumbnail, title } = props;
-  console.log(thumbnail);
   return (
     <Card className={classes.card}>
       <img src={thumbnail} alt="hero" />

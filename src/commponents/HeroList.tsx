@@ -7,14 +7,6 @@ interface IProps {
   heroes: IHero[];
 }
 
-//   enum Size {
-//   Small = '/portrait_small.',
-//   Medium = '/portrait_medium.',
-//   Xlarge = '/portrait_xlarge.',
-//   Fantastic = '/portrait_fantastic.',
-//   Uncanny = '/portrait_uncanny.',
-// }
-
 export const HeroList: React.FC<IProps> = ({ heroes }: IProps) => {
   const size = '/portrait_fantastic.';
   return (
@@ -29,6 +21,7 @@ export const HeroList: React.FC<IProps> = ({ heroes }: IProps) => {
                   name={hero.name}
                   description={hero.description}
                   thumbnail={`${hero.thumbnail.path}${size}${hero.thumbnail.extension}`}
+                  commics={hero.comics.returned}
                 />
               ))
             : null}
