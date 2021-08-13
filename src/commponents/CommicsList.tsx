@@ -17,15 +17,18 @@ export const CommicsList: React.FC<IProps> = ({ commics, loading }: IProps) => {
       <div className="container">
         <div className="heroes-wrapper">
           {commics.length && !loading ? (
-            commics.map((commic) => (
-              <CommicsCard
-                key={commic.id}
-                id={commic.id}
-                title={commic.title}
-                description={commic.description}
-                thumbnail={`${commic.thumbnail.path}${size}${commic.thumbnail.extension}`}
-              />
-            ))
+            commics.map((commic) => {
+              const thumbnail = `${commic.thumbnail.path}${size}${commic.thumbnail.extension}`;
+              return (
+                <CommicsCard
+                  key={commic.id}
+                  id={commic.id}
+                  title={commic.title}
+                  description={commic.description}
+                  thumbnail={thumbnail}
+                />
+              );
+            })
           ) : (
             <Backdrop open invisible={true}>
               <CircularProgress color="secondary" />

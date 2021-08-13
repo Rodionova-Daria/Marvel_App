@@ -14,16 +14,19 @@ export const HeroList: React.FC<IProps> = ({ heroes }: IProps) => {
       <div className="container">
         <div className="heroes-wrapper">
           {heroes.length
-            ? heroes.map((hero) => (
-                <HeroCard
-                  key={hero.id}
-                  id={hero.id}
-                  name={hero.name}
-                  description={hero.description}
-                  thumbnail={`${hero.thumbnail.path}${size}${hero.thumbnail.extension}`}
-                  commics={hero.comics.returned}
-                />
-              ))
+            ? heroes.map((hero) => {
+                const thumbnail = `${hero.thumbnail.path}${size}${hero.thumbnail.extension}`;
+                return (
+                  <HeroCard
+                    key={hero.id}
+                    id={hero.id}
+                    name={hero.name}
+                    description={hero.description}
+                    thumbnail={thumbnail}
+                    commics={hero.comics.returned}
+                  />
+                );
+              })
             : null}
         </div>
       </div>

@@ -87,7 +87,7 @@ class MarvelHome extends Component<IProps, IState> {
         <Header />
         {!this.state.loading ? (
           <>
-            <Search searchChange={this.onSearchChange} OrderButton={this.sortByCommics} />
+            <Search searchChange={this.onSearchChange} sortCommics={this.sortByCommics} />
             <HeroList heroes={filterHeroes} />
             <Paginations
               postsPerPage={this.state.heroesPerPage}
