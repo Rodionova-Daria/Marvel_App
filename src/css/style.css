@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+.container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.logo {
+    max-width: 200px;
+}
+
+.btn {
+    text-decoration: none;
+    border-radius: 5px;
+    padding: 7px 15px ;
+    transition:  background-color 0.3s ease, color 0.3s ease;
+}
+
+.search {
+    padding: 50px 0;
+    font-weight: 500;
+}
+
+.search-btn {
+    background-color: red;
+    color: white;
+    text-transform: uppercase;
+}
+
+.search-btn:hover {
+    background-color: rgb(194, 35, 35);
+}
+
+.search-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+input[type="search"] {
+    padding: 8px 10px;
+    width: 60%;
+    margin: 0 10px;
+}
+
+.heroes-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.link {
+    text-decoration: none;
+    color: black;
+    transition: color 0.3s ease;
+}
+
+.link:hover {
+    color: red;
+}
+
+.thumbnail {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.thumbnail:hover {
+    transform:scale(1.1);
+    box-shadow: 7px 7px 7px rgb(63, 62, 62);
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+}
