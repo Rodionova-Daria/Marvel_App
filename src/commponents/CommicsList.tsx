@@ -1,23 +1,19 @@
 import React from 'react';
 import '../css/style.css';
-import { ICommics } from '../interfaces/Icommics';
 import { CommicsCard } from './CommicsCard';
 import Backdrop from '@material-ui/core/Backdrop';
 import { CircularProgress } from '@material-ui/core';
+import { connect, ConnectedProps } from 'react-redux';
+import { RootState } from '../redux/rootReducer';
 
-interface IProps {
-  commics: ICommics[];
-  loading: boolean;
-}
-
-export const CommicsList: React.FC<IProps> = ({ commics, loading }: IProps) => {
+const CommicsList: React.FC<PropsFromRedux> = (props: PropsFromRedux) => {
   const size = '/portrait_fantastic.';
   return (
     <section className="heroes-section">
       <div className="container">
         <div className="heroes-wrapper">
-          {commics.length && !loading ? (
-            commics.map((commic) => {
+          {props.commics.length && !props.loading ? (
+            props.commics.map((commic) => {
               const thumbnail = `${commic.thumbnail.path}${size}${commic.thumbnail.extension}`;
               return (
                 <CommicsCard
@@ -39,3 +35,15 @@ export const CommicsList: React.FC<IProps> = ({ commics, loading }: IProps) => {
     </section>
   );
 };
+
+const mapStateToProps = (state: RootState) => {
+  return {
+    commics: state.commics.fetchCommics,
+    loading: state.commics.loading,
+  };
+};
+
+const connector = connect(mapStateToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(CommicsList);

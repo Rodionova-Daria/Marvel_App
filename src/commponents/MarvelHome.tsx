@@ -1,22 +1,20 @@
 import React, { Component } from 'react';
 import { IHero } from '../interfaces/Ihero';
 import { Header } from './Header';
-import { Search } from './Search';
+import Search from './Search';
 import { HeroList } from './HeroList';
-import { getHeroes } from './api';
 import Backdrop from '@material-ui/core/Backdrop';
 import { CircularProgress } from '@material-ui/core';
 import { RouteComponentProps } from 'react-router-dom';
-import { Paginations } from './Paginations';
+import Paginations from './Paginations';
+import { RootState } from '../redux/rootReducer';
+import { connect, ConnectedProps } from 'react-redux';
+import { fetchHeroSaga, searchValue } from '../redux/actions';
 
-type IProps = RouteComponentProps<{ location: string }>;
+interface IProps extends RouteComponentProps<{ location: string }>, PropsFromRedux {}
 
 interface IState {
-  heroes: IHero[];
-  searchField: string;
-  loading: boolean;
   currentPage: number;
-  heroesPerPage: number;
 }
 
 class MarvelHome extends Component<IProps, IState> {
@@ -24,37 +22,19 @@ class MarvelHome extends Component<IProps, IState> {
     super(props);
 
     this.state = {
-      heroes: [],
-      searchField: '',
-      loading: true,
       currentPage: 1,
-      heroesPerPage: 4,
     };
 
-    this.onSearchChange = this.onSearchChange.bind(this);
     this.filterHeroes = this.filterHeroes.bind(this);
     this.paginationHandleChange = this.paginationHandleChange.bind(this);
-    this.sortByCommics = this.sortByCommics.bind(this);
   }
 
   async componentDidMount(): Promise<void> {
-    try {
-      const res = await getHeroes(this.props.location.search);
-      this.setState({
-        heroes: res.data.data.results,
-        loading: false,
-      });
-    } catch (err) {
-      console.log(`Request was failed ${err}`);
-    }
-  }
-
-  onSearchChange(e: React.ChangeEvent<HTMLInputElement>): void {
-    this.setState({ searchField: e.target.value });
+    await this.props.fetchHeroSaga(this.props.location.search);
   }
 
   filterHeroes(posts: IHero[]): IHero[] {
-    const searchField = this.state.searchField.toLowerCase();
+    const searchField = this.props.searchField.toLowerCase();
     return posts.filter((hero) => hero.name.toLowerCase().includes(searchField));
   }
 
@@ -62,36 +42,28 @@ class MarvelHome extends Component<IProps, IState> {
     this.setState({ currentPage: page });
   }
 
-  sortByCommics(): void {
-    const sortHeroes = this.state.heroes.sort(
-      (first: IHero, last: IHero) => last.comics.returned - first.comics.returned
-    );
-    this.setState({ heroes: sortHeroes });
-  }
-
   checkOnPosts(currentPosts: IHero[]): IHero[] {
-    if (this.state.searchField === '') {
+    if (this.props.searchField === '') {
       return this.filterHeroes(currentPosts);
     } else {
-      return this.filterHeroes(this.state.heroes);
+      return this.filterHeroes(this.props.heroes);
     }
   }
 
   render(): React.ReactNode {
-    const indexOfLastPost = this.state.currentPage * this.state.heroesPerPage;
-    const indexOfFirstPost = indexOfLastPost - this.state.heroesPerPage;
-    const currentPosts = this.state.heroes.slice(indexOfFirstPost, indexOfLastPost);
+    const indexOfLastPost = this.state.currentPage * this.props.heroesPerPage;
+    const indexOfFirstPost = indexOfLastPost - this.props.heroesPerPage;
+    const currentPosts = this.props.heroes.slice(indexOfFirstPost, indexOfLastPost);
     const filterHeroes = this.checkOnPosts(currentPosts);
     return (
       <div>
         <Header />
-        {!this.state.loading ? (
+        {!this.props.loading ? (
           <>
-            <Search searchChange={this.onSearchChange} sortCommics={this.sortByCommics} />
+            <Search />
             <HeroList heroes={filterHeroes} />
             <Paginations
-              postsPerPage={this.state.heroesPerPage}
-              totalPosts={this.state.heroes.length}
+              totalPosts={this.props.heroes.length}
               handleChange={this.paginationHandleChange}
             />
           </>
@@ -105,4 +77,16 @@ class MarvelHome extends Component<IProps, IState> {
   }
 }
 
-export default MarvelHome;
+const mapStateToProps = (state: RootState) => {
+  return {
+    heroes: state.heroes.fetchHeroes,
+    loading: state.heroes.loading,
+    searchField: state.searchField.serchField,
+    heroesPerPage: state.heroes.heroesPerPage,
+  };
+};
+
+const connector = connect(mapStateToProps, { searchValue, fetchHeroSaga });
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(MarvelHome);

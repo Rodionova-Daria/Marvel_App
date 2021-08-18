@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { ICommics } from '../interfaces/Icommics';
 import { Header } from './Header';
-import { getCommics } from './api';
-import { CommicsList } from './CommicsList';
+import CommicsList from './CommicsList';
+import { connect, ConnectedProps } from 'react-redux';
+import { fetchCommicsSaga } from '../redux/actions';
 
-type ICommicsProps = RouteComponentProps<{ id: string }>;
+interface ICommicsProps extends RouteComponentProps<{ id: string }>, PropsFromRedux {}
 
 interface ICommicsState {
-  commics: ICommics[];
   heroID: string;
-  loading: boolean;
 }
 
 class Commics extends Component<ICommicsProps, ICommicsState> {
@@ -18,28 +16,23 @@ class Commics extends Component<ICommicsProps, ICommicsState> {
     super(props);
 
     this.state = {
-      commics: [],
       heroID: props.match.params.id,
-      loading: true,
     };
   }
 
   async componentDidMount(): Promise<void> {
-    try {
-      const res = await getCommics(this.state.heroID);
-      this.setState({ commics: res.data.data.results, loading: false });
-    } catch (err) {
-      console.log(`Request was failed ${err}`);
-    }
+    await this.props.fetchCommicsSaga(this.state.heroID);
   }
 
   render(): React.ReactNode {
     return (
       <div>
         <Header />
-        <CommicsList commics={this.state.commics} loading={this.state.loading} />
+        <CommicsList />
       </div>
     );
   }
 }
-export { Commics };
+const connector = connect(null, { fetchCommicsSaga });
+type PropsFromRedux = ConnectedProps<typeof connector>;
+export default connector(Commics);
