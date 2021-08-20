@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
 import { IHero } from '../interfaces/Ihero';
 import { Header } from './Header';
-import { Search } from './Search';
+import Search from './Search';
 import { HeroList } from './HeroList';
-import { getHeroes } from './api';
 import Backdrop from '@material-ui/core/Backdrop';
 import { CircularProgress } from '@material-ui/core';
 import { RouteComponentProps } from 'react-router-dom';
-import { Paginations } from './Paginations';
+import Paginations from './Paginations';
+import { RootState } from '../redux/rootReducer';
+import { connect, ConnectedProps } from 'react-redux';
+import { fetchHeroSaga } from '../redux/actions';
 
-type IProps = RouteComponentProps<{ location: string }>;
+type IProps = RouteComponentProps<{ location: string }> & PropsFromRedux;
 
 interface IState {
-  heroes: IHero[];
-  searchField: string;
-  loading: boolean;
   currentPage: number;
+  searchField: string;
   heroesPerPage: number;
 }
 
@@ -24,29 +24,18 @@ class MarvelHome extends Component<IProps, IState> {
     super(props);
 
     this.state = {
-      heroes: [],
-      searchField: '',
-      loading: true,
       currentPage: 1,
+      searchField: '',
       heroesPerPage: 4,
     };
 
-    this.onSearchChange = this.onSearchChange.bind(this);
     this.filterHeroes = this.filterHeroes.bind(this);
     this.paginationHandleChange = this.paginationHandleChange.bind(this);
-    this.sortByCommics = this.sortByCommics.bind(this);
+    this.onSearchChange = this.onSearchChange.bind(this);
   }
 
   async componentDidMount(): Promise<void> {
-    try {
-      const res = await getHeroes(this.props.location.search);
-      this.setState({
-        heroes: res.data.data.results,
-        loading: false,
-      });
-    } catch (err) {
-      console.log(`Request was failed ${err}`);
-    }
+    await this.props.fetchHeroSaga(this.props.location.search);
   }
 
   onSearchChange(e: React.ChangeEvent<HTMLInputElement>): void {
@@ -62,36 +51,29 @@ class MarvelHome extends Component<IProps, IState> {
     this.setState({ currentPage: page });
   }
 
-  sortByCommics(): void {
-    const sortHeroes = this.state.heroes.sort(
-      (first: IHero, last: IHero) => last.comics.returned - first.comics.returned
-    );
-    this.setState({ heroes: sortHeroes });
-  }
-
   checkOnPosts(currentPosts: IHero[]): IHero[] {
     if (this.state.searchField === '') {
       return this.filterHeroes(currentPosts);
     } else {
-      return this.filterHeroes(this.state.heroes);
+      return this.filterHeroes(this.props.heroes);
     }
   }
 
   render(): React.ReactNode {
     const indexOfLastPost = this.state.currentPage * this.state.heroesPerPage;
     const indexOfFirstPost = indexOfLastPost - this.state.heroesPerPage;
-    const currentPosts = this.state.heroes.slice(indexOfFirstPost, indexOfLastPost);
+    const currentPosts = this.props.heroes.slice(indexOfFirstPost, indexOfLastPost);
     const filterHeroes = this.checkOnPosts(currentPosts);
     return (
       <div>
         <Header />
-        {!this.state.loading ? (
+        {!this.props.loading ? (
           <>
-            <Search searchChange={this.onSearchChange} sortCommics={this.sortByCommics} />
+            <Search onSearchChange={this.onSearchChange} />
             <HeroList heroes={filterHeroes} />
             <Paginations
-              postsPerPage={this.state.heroesPerPage}
-              totalPosts={this.state.heroes.length}
+              heroesPerPage={this.state.heroesPerPage}
+              totalPosts={this.props.heroes.length}
               handleChange={this.paginationHandleChange}
             />
           </>
@@ -105,4 +87,14 @@ class MarvelHome extends Component<IProps, IState> {
   }
 }
 
-export default MarvelHome;
+const mapStateToProps = (state: RootState) => {
+  return {
+    heroes: state.heroes.fetchHeroes,
+    loading: state.heroes.loading,
+  };
+};
+
+const connector = connect(mapStateToProps, { fetchHeroSaga });
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(MarvelHome);

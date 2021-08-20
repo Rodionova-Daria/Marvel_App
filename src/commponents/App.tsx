@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Commics } from './Commics';
+import Commics from './Commics';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { PageNotFound } from './PageNotFound';
 import MarvelHome from './MarvelHome';
