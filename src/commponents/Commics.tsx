@@ -5,7 +5,7 @@ import CommicsList from './CommicsList';
 import { connect, ConnectedProps } from 'react-redux';
 import { fetchCommicsSaga } from '../redux/actions';
 
-interface ICommicsProps extends RouteComponentProps<{ id: string }>, PropsFromRedux {}
+type ICommicsProps = RouteComponentProps<{ id: string }> & PropsFromRedux;
 
 interface ICommicsState {
   heroID: string;

@@ -3,25 +3,24 @@ import { connect, ConnectedProps } from 'react-redux';
 import '../css/style.css';
 import { IHero } from '../interfaces/Ihero';
 import { RootState } from '../redux/rootReducer';
-import { searchValue, sortHeroes } from '../redux/actions';
+import { sortHeroes } from '../redux/actions';
 
-class Search extends Component<PropsFromRedux> {
-  constructor(props: PropsFromRedux) {
+interface IProps extends PropsFromRedux {
+  onSearchChange(e: React.ChangeEvent<HTMLInputElement>): void;
+}
+
+class Search extends Component<IProps> {
+  constructor(props: IProps) {
     super(props);
 
-    this.onSearchChange = this.onSearchChange.bind(this);
     this.sortByCommics = this.sortByCommics.bind(this);
   }
 
-  onSearchChange(e: React.ChangeEvent<HTMLInputElement>): void {
-    this.props.searchValue(e.target.value);
-  }
-
   sortByCommics(): void {
-    const sortHeroes: IHero[] = this.props.heroes.sort(
+    const sortedHeroes: IHero[] = this.props.heroes.sort(
       (first: IHero, last: IHero) => last.comics.returned - first.comics.returned
     );
-    this.props.sortHeroes(sortHeroes);
+    this.props.sortHeroes(sortedHeroes);
   }
 
   render() {
@@ -29,7 +28,11 @@ class Search extends Component<PropsFromRedux> {
       <section className="search">
         <div className="container">
           <div className="search-bar">
-            <input type="search" placeholder="Enter the hero" onChange={this.onSearchChange} />
+            <input
+              type="search"
+              placeholder="Enter the hero"
+              onChange={this.props.onSearchChange}
+            />
             <a className="btn search-btn" onClick={this.sortByCommics}>
               Order By Number Of Commics
             </a>
@@ -43,11 +46,10 @@ class Search extends Component<PropsFromRedux> {
 const mapStateToProps = (state: RootState) => {
   return {
     heroes: state.heroes.fetchHeroes,
-    searchField: state.searchField.serchField,
   };
 };
 
-const connector = connect(mapStateToProps, { searchValue, sortHeroes });
+const connector = connect(mapStateToProps, { sortHeroes });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(Search);

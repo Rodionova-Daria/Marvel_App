@@ -1,22 +1,16 @@
-import {
-  CommicsAction,
-  FETCH_COMMICS_SUCCESS,
-  FETCH_COMMICS_SAGA,
-  CommicsSagaAction,
-} from './types/CommicsTypes';
+import { CommicsAction, CommicsSagaAction } from './types/CommicsActionsTypes';
 
-import {
-  FETCH_HEROES_SAGA,
-  FETCH_HEROES_SUCCESS,
-  HeroesAction,
-  HeroesSagaAction,
-  HEROES_PER_PAGE,
-  SORT_HEROES,
-} from './types/HeroesTypes';
+import { HeroesAction, HeroesSagaAction } from './types/HeroesActionsTypes';
 
-import { SEARCHFIELD, SearchFieldAction } from './types/SearchTypes';
 import { IHero } from '../interfaces/Ihero';
 import { ICommics } from '../interfaces/Icommics';
+import {
+  FETCH_COMMICS_SAGA,
+  FETCH_COMMICS_SUCCESS,
+  FETCH_HEROES_SAGA,
+  FETCH_HEROES_SUCCESS,
+  SORT_HEROES,
+} from './types/Types';
 
 export function fetchCommicsSaga(id: string): CommicsSagaAction {
   return {
@@ -32,14 +26,14 @@ export function fetchHeroSaga(search: string): HeroesSagaAction {
   };
 }
 
-export function setCommics(payload: ICommics[]): CommicsAction {
+export function fetchCommicsSuccesAction(payload: ICommics[]): CommicsAction {
   return {
     type: FETCH_COMMICS_SUCCESS,
     payload,
   };
 }
 
-export function setHeroes(payload: IHero[]): HeroesAction {
+export function fetchHeroesSuccessAction(payload: IHero[]): HeroesAction {
   return {
     type: FETCH_HEROES_SUCCESS,
     payload,
@@ -50,19 +44,5 @@ export function sortHeroes(sortHeroes: IHero[]): HeroesAction {
   return {
     type: SORT_HEROES,
     payload: sortHeroes,
-  };
-}
-
-export function searchValue(search: string): SearchFieldAction {
-  return {
-    type: SEARCHFIELD,
-    payload: search,
-  };
-}
-
-export function heroesPerPage(heroesNumber: number): HeroesAction {
-  return {
-    type: HEROES_PER_PAGE,
-    payload: heroesNumber,
   };
 }

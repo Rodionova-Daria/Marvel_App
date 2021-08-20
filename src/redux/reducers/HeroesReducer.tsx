@@ -1,12 +1,5 @@
-import {
-  HeroesAction,
-  HeroesState,
-  FETCH_HEROES,
-  FETCH_HEROES_ERROR,
-  FETCH_HEROES_SUCCESS,
-  SORT_HEROES,
-  HEROES_PER_PAGE,
-} from '../types/HeroesTypes';
+import { HeroesAction, HeroesState } from '../types/HeroesActionsTypes';
+import { FETCH_ERROR, FETCH_HEROES, FETCH_HEROES_SUCCESS, SORT_HEROES } from '../types/Types';
 
 const initialState: HeroesState = {
   fetchHeroes: [],
@@ -31,11 +24,11 @@ export const heroesReducer = (state = initialState, action: HeroesAction): Heroe
         loading: false,
         error: null,
       };
-    case FETCH_HEROES_ERROR:
+    case FETCH_ERROR:
       return {
         ...state,
         fetchHeroes: [],
-        loading: true,
+        loading: false,
         error: action.payload,
       };
     case SORT_HEROES:
@@ -44,11 +37,6 @@ export const heroesReducer = (state = initialState, action: HeroesAction): Heroe
         fetchHeroes: [...action.payload],
         loading: false,
         error: null,
-      };
-    case HEROES_PER_PAGE:
-      return {
-        ...state,
-        heroesPerPage: action.payload,
       };
     default:
       return state;

@@ -1,10 +1,9 @@
 import React from 'react';
 import { Pagination } from '@material-ui/lab';
 import '../css/style.css';
-import { RootState } from '../redux/rootReducer';
-import { connect, ConnectedProps } from 'react-redux';
 
-interface IProps extends PropsFromRedux {
+interface IProps {
+  heroesPerPage: number;
   totalPosts: number;
   handleChange(event: React.ChangeEvent<unknown>, page: number): void;
 }
@@ -28,13 +27,4 @@ const Paginations: React.FC<IProps> = (props: IProps) => {
   );
 };
 
-const mapStateToProps = (state: RootState) => {
-  return {
-    heroesPerPage: state.heroes.heroesPerPage,
-  };
-};
-
-const connector = connect(mapStateToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-export default connector(Paginations);
+export default Paginations;

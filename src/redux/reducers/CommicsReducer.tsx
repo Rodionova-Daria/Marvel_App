@@ -1,10 +1,5 @@
-import {
-  CommicsAction,
-  CommicsState,
-  FETCH_COMMICS,
-  FETCH_COMMICS_ERROR,
-  FETCH_COMMICS_SUCCESS,
-} from '../types/CommicsTypes';
+import { CommicsAction, CommicsState } from '../types/CommicsActionsTypes';
+import { FETCH_COMMICS, FETCH_ERROR, FETCH_COMMICS_SUCCESS } from '../types/Types';
 
 const initialState: CommicsState = {
   fetchCommics: [],
@@ -28,11 +23,11 @@ export const commicsReducer = (state = initialState, action: CommicsAction): Com
         loading: false,
         error: null,
       };
-    case FETCH_COMMICS_ERROR:
+    case FETCH_ERROR:
       return {
         ...state,
         fetchCommics: [],
-        loading: true,
+        loading: false,
         error: action.payload,
       };
     default:
