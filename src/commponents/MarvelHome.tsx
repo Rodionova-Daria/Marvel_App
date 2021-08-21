@@ -8,11 +8,12 @@ import { CircularProgress } from '@material-ui/core';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import Paginations from './Paginations';
 import { useActions, useTypeSelector } from '../redux/hooks';
+import { ErrorHandler } from './ErrorHandler';
 
 type IProps = RouteComponentProps<{ location: string }>;
 
 const MarvelHome: React.FC<IProps> = (props: IProps) => {
-  const { fetchHeroes, loading } = useTypeSelector((state) => state.heroes);
+  const { fetchHeroes, loading, error } = useTypeSelector((state) => state.heroes);
   const { fetchHeroSaga } = useActions();
   const history = useHistory();
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -48,6 +49,31 @@ const MarvelHome: React.FC<IProps> = (props: IProps) => {
     }
   };
 
+  const errorHandlerHeroes = () => {
+    if (!loading && !error) {
+      return (
+        <>
+          <Search onSearchChange={onSearchChange} />
+          <HeroList heroes={filterHeroes} />
+          <Paginations
+            totalPosts={fetchHeroes.length}
+            handleChange={paginationHandleChange}
+            heroesPerPage={heroesPerPage}
+          />
+        </>
+      );
+    } else if (error) {
+      const errorText = 'Error  in heroes request. Try again later';
+      return <ErrorHandler errorText={errorText} />;
+    } else {
+      return (
+        <Backdrop open invisible={true}>
+          <CircularProgress color="secondary" />
+        </Backdrop>
+      );
+    }
+  };
+
   const indexOfLastPost = currentPage * heroesPerPage;
   const indexOfFirstPost = indexOfLastPost - heroesPerPage;
   const currentPosts = fetchHeroes.slice(indexOfFirstPost, indexOfLastPost);
@@ -56,21 +82,7 @@ const MarvelHome: React.FC<IProps> = (props: IProps) => {
   return (
     <div>
       <Header />
-      {!loading ? (
-        <>
-          <Search onSearchChange={onSearchChange} />
-          <HeroList heroes={filterHeroes} />
-          <Paginations
-            heroesPerPage={heroesPerPage}
-            totalPosts={fetchHeroes.length}
-            handleChange={paginationHandleChange}
-          />
-        </>
-      ) : (
-        <Backdrop open invisible={true}>
-          <CircularProgress color="secondary" />
-        </Backdrop>
-      )}
+      {errorHandlerHeroes()}
     </div>
   );
 };

@@ -15,6 +15,6 @@ function* sagaWorker({ payload }: ComicsSagaAction) {
     const res: AxiosResponse = yield call(getComics, payload);
     yield put(fetchCommicsSuccesAction(res.data.data.results));
   } catch (err) {
-    put({ type: FETCH_ERROR, payload: 'The request was failed !' });
+    yield put({ type: FETCH_ERROR, payload: 'The request was failed !' });
   }
 }

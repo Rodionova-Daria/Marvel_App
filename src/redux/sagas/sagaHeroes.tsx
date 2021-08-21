@@ -15,6 +15,6 @@ function* sagaWorker({ payload }: HeroesSagaAction) {
     const res: AxiosResponse = yield call(getHeroes, payload);
     yield put(fetchHeroesSuccessAction(res.data.data.results));
   } catch (err) {
-    put({ type: FETCH_ERROR, payload: 'Error in request' });
+    yield put({ type: FETCH_ERROR, payload: 'Error in request' });
   }
 }
