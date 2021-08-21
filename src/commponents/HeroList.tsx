@@ -23,7 +23,7 @@ export const HeroList: React.FC<IProps> = ({ heroes }: IProps) => {
                     name={hero.name}
                     description={hero.description}
                     thumbnail={thumbnail}
-                    commics={hero.comics.returned}
+                    comics={hero.comics.returned}
                   />
                 );
               })

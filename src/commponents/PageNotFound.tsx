@@ -1,7 +1,7 @@
-import React, { FunctionComponent } from 'react';
+import React from 'react';
 import '../css/style.css';
 
-const PageNotFound: FunctionComponent = () => {
+const PageNotFound: React.FC = () => {
   return (
     <div className="container">
       <h1>404 </h1>

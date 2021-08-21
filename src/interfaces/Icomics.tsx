@@ -1,6 +1,6 @@
 import { IMarvelImage, IMarvelList, IMarvelSummary } from './Ihero';
 
-interface ICommics {
+interface IComics {
   id: number;
   digitalId: number;
   title: string;
@@ -18,4 +18,4 @@ interface CharacterSummary extends IMarvelSummary {
   role: string;
 }
 
-export type { ICommics, ICharacterList, CharacterSummary };
+export type { IComics, ICharacterList, CharacterSummary };

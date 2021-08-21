@@ -1,55 +1,35 @@
-import React, { Component } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
+import React from 'react';
 import '../css/style.css';
 import { IHero } from '../interfaces/Ihero';
-import { RootState } from '../redux/rootReducer';
-import { sortHeroes } from '../redux/actions';
+import { useActions, useTypeSelector } from '../redux/hooks';
 
-interface IProps extends PropsFromRedux {
+interface IProps {
   onSearchChange(e: React.ChangeEvent<HTMLInputElement>): void;
 }
 
-class Search extends Component<IProps> {
-  constructor(props: IProps) {
-    super(props);
+const Search: React.FC<IProps> = (props: IProps) => {
+  const { fetchHeroes } = useTypeSelector((state) => state.heroes);
+  const { sortHeroes } = useActions();
 
-    this.sortByCommics = this.sortByCommics.bind(this);
-  }
-
-  sortByCommics(): void {
-    const sortedHeroes: IHero[] = this.props.heroes.sort(
+  const sortByCommics = (): void => {
+    const sortedHeroes: IHero[] = fetchHeroes.sort(
       (first: IHero, last: IHero) => last.comics.returned - first.comics.returned
     );
-    this.props.sortHeroes(sortedHeroes);
-  }
-
-  render() {
-    return (
-      <section className="search">
-        <div className="container">
-          <div className="search-bar">
-            <input
-              type="search"
-              placeholder="Enter the hero"
-              onChange={this.props.onSearchChange}
-            />
-            <a className="btn search-btn" onClick={this.sortByCommics}>
-              Order By Number Of Commics
-            </a>
-          </div>
-        </div>
-      </section>
-    );
-  }
-}
-
-const mapStateToProps = (state: RootState) => {
-  return {
-    heroes: state.heroes.fetchHeroes,
+    sortHeroes(sortedHeroes);
   };
+
+  return (
+    <section className="search">
+      <div className="container">
+        <div className="search-bar">
+          <input type="search" placeholder="Enter the hero" onChange={props.onSearchChange} />
+          <a className="btn search-btn" onClick={sortByCommics}>
+            Order By Number Of Commics
+          </a>
+        </div>
+      </div>
+    </section>
+  );
 };
 
-const connector = connect(mapStateToProps, { sortHeroes });
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-export default connector(Search);
+export default Search;

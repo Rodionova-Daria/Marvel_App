@@ -1,5 +1,5 @@
 import { IHero } from '../../interfaces/Ihero';
-import { FetchErrorAction } from './CommicsActionsTypes';
+import { FetchErrorAction } from './ComicsActionsTypes';
 import { FETCH_HEROES, FETCH_HEROES_SAGA, FETCH_HEROES_SUCCESS, SORT_HEROES } from './Types';
 
 export interface HeroesState {

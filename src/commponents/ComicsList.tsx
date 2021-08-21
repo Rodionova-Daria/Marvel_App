@@ -1,26 +1,26 @@
 import React from 'react';
 import '../css/style.css';
-import { CommicsCard } from './CommicsCard';
+import { ComicsCard } from './ComicsCard';
 import Backdrop from '@material-ui/core/Backdrop';
 import { CircularProgress } from '@material-ui/core';
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../redux/rootReducer';
 
-const CommicsList: React.FC<PropsFromRedux> = (props: PropsFromRedux) => {
+const ComicsList: React.FC<PropsFromRedux> = (props: PropsFromRedux) => {
   const size = '/portrait_fantastic.';
   return (
     <section className="heroes-section">
       <div className="container">
         <div className="heroes-wrapper">
-          {props.commics.length && !props.loading ? (
-            props.commics.map((commic) => {
-              const thumbnail = `${commic.thumbnail.path}${size}${commic.thumbnail.extension}`;
+          {props.comics.length && !props.loading ? (
+            props.comics.map((comic) => {
+              const thumbnail = `${comic.thumbnail.path}${size}${comic.thumbnail.extension}`;
               return (
-                <CommicsCard
-                  key={commic.id}
-                  id={commic.id}
-                  title={commic.title}
-                  description={commic.description}
+                <ComicsCard
+                  key={comic.id}
+                  id={comic.id}
+                  title={comic.title}
+                  description={comic.description}
                   thumbnail={thumbnail}
                 />
               );
@@ -38,12 +38,12 @@ const CommicsList: React.FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
 const mapStateToProps = (state: RootState) => {
   return {
-    commics: state.commics.fetchCommics,
-    loading: state.commics.loading,
+    comics: state.comics.fetchComics,
+    loading: state.comics.loading,
   };
 };
 
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export default connector(CommicsList);
+export default connector(ComicsList);

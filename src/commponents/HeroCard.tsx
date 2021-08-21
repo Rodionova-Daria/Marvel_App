@@ -8,7 +8,7 @@ interface IProps {
   name: string;
   description: string;
   thumbnail: string;
-  commics: number;
+  comics: number;
 }
 
 const useStyles = makeStyles(() => ({
@@ -17,7 +17,7 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
     marginBottom: '20px',
   },
-  commics: {
+  comics: {
     color: 'red',
     fontWeight: 500,
   },
@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
 
 export const HeroCard: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
-  const { name, description, thumbnail, id, commics } = props;
+  const { name, description, thumbnail, id, comics } = props;
   return (
     <Card className={classes.card}>
       <Link to={`/commics/${id}`} className="link">
@@ -38,7 +38,7 @@ export const HeroCard: React.FC<IProps> = (props: IProps) => {
           </Link>
         </Typography>
         <Typography>{description}</Typography>
-        <Typography className={classes.commics}>Commics: {commics}</Typography>
+        <Typography className={classes.comics}>Commics: {comics}</Typography>
       </CardContent>
     </Card>
   );

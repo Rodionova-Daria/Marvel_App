@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const CommicsCard: React.FC<IProps> = (props: IProps) => {
+const ComicsCard: React.FC<IProps> = (props: IProps) => {
   const classes = useStyles();
   const { description, thumbnail, title } = props;
   return (
@@ -39,4 +39,4 @@ const CommicsCard: React.FC<IProps> = (props: IProps) => {
   );
 };
 
-export { CommicsCard };
+export { ComicsCard };
