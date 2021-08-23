@@ -8,7 +8,7 @@ const params = {
 };
 
 async function getHeroes(searchProps: string): Promise<AxiosResponse> {
-  const url = `${baseURL}:443/v1/public/characters${searchProps}`;
+  const url = `${baseURL}:443/v1/public/characters?limit=40${searchProps}`;
   const res: AxiosResponse = await axios.get<IHero[]>(url, { params });
   try {
     return res;

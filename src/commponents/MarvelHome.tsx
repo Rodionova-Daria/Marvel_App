@@ -18,7 +18,7 @@ const MarvelHome: React.FC<IProps> = (props: IProps) => {
   const history = useHistory();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchField, setsearchField] = useState<string>('');
-  const [heroesPerPage] = useState<number>(4);
+  const [heroesPerPage] = useState<number>(8);
 
   useEffect(() => {
     fetchHeroSaga(props.location.search);

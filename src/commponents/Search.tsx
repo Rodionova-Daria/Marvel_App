@@ -24,7 +24,7 @@ const Search: React.FC<IProps> = (props: IProps) => {
         <div className="search-bar">
           <input type="search" placeholder="Enter the hero" onChange={props.onSearchChange} />
           <a className="btn search-btn" onClick={sortByCommics}>
-            Order By Number Of Commics
+            Order By Number Of Comics
           </a>
         </div>
       </div>
