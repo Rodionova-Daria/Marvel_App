@@ -9,18 +9,17 @@ type IComicsProps = RouteComponentProps<{ id: string }>;
 
 const Comics: React.FC<IComicsProps> = (props: IComicsProps) => {
   const [heroID] = useState(props.match.params.id);
-  const { fetchCommicsSaga } = useActions();
+  const { fetchCommics } = useActions();
   const { error } = useTypeSelector((state) => state.comics);
-  const errorText = 'Error in comics request. Try again later';
 
   useEffect(() => {
-    fetchCommicsSaga(heroID);
+    fetchCommics(heroID);
   }, []);
 
   return (
     <div>
       <Header />
-      {error ? <ErrorHandler errorText={errorText} /> : <CommicsList />}
+      {error ? <ErrorHandler errorText={error} /> : <CommicsList />}
     </div>
   );
 };

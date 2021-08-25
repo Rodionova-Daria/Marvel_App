@@ -5,24 +5,28 @@ import { HeroesAction, HeroesSagaAction } from './types/HeroesActionsTypes';
 import { IHero } from '../interfaces/Ihero';
 import { IComics } from '../interfaces/Icomics';
 import {
-  FETCH_COMICS_SAGA,
+  FETCH_COMICS,
   FETCH_COMICS_SUCCESS,
-  FETCH_HEROES_SAGA,
+  FETCH_HEROES,
   FETCH_HEROES_SUCCESS,
   SORT_HEROES,
 } from './types/Types';
 
-export function fetchCommicsSaga(id: string): ComicsSagaAction {
+export function fetchCommics(id: string): ComicsSagaAction {
   return {
-    type: FETCH_COMICS_SAGA,
+    type: FETCH_COMICS,
     payload: id,
   };
 }
 
-export function fetchHeroSaga(search: string): HeroesSagaAction {
+export function fetchHero(offset: number, limit: number, name?: string): HeroesSagaAction {
   return {
-    type: FETCH_HEROES_SAGA,
-    payload: search,
+    type: FETCH_HEROES,
+    payload: {
+      offset,
+      limit,
+      name,
+    },
   };
 }
 

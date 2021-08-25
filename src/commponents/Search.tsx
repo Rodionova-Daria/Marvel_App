@@ -8,11 +8,11 @@ interface IProps {
 }
 
 const Search: React.FC<IProps> = (props: IProps) => {
-  const { fetchHeroes } = useTypeSelector((state) => state.heroes);
+  const { heroes } = useTypeSelector((state) => state.heroes);
   const { sortHeroes } = useActions();
 
   const sortByCommics = (): void => {
-    const sortedHeroes: IHero[] = fetchHeroes.sort(
+    const sortedHeroes: IHero[] = heroes.sort(
       (first: IHero, last: IHero) => last.comics.returned - first.comics.returned
     );
     sortHeroes(sortedHeroes);

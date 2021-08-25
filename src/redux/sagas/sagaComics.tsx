@@ -3,18 +3,17 @@ import { AxiosResponse } from 'axios';
 import { fetchCommicsSuccesAction } from '../actions';
 import { ComicsSagaAction } from '../types/ComicsActionsTypes';
 import { getComics } from '../../commponents/api';
-import { FETCH_COMICS, FETCH_ERROR, FETCH_COMICS_SAGA } from '../types/Types';
+import { FETCH_COMICS, FETCH_ERROR } from '../types/Types';
 
 export function* sagaCommicsWatcher(): Generator {
-  yield takeEvery(FETCH_COMICS_SAGA, sagaWorker);
+  yield takeEvery(FETCH_COMICS, sagaWorker);
 }
 
 function* sagaWorker({ payload }: ComicsSagaAction) {
   try {
-    yield put({ type: FETCH_COMICS });
     const res: AxiosResponse = yield call(getComics, payload);
     yield put(fetchCommicsSuccesAction(res.data.data.results));
   } catch (err) {
-    yield put({ type: FETCH_ERROR, payload: 'The request was failed !' });
+    yield put({ type: FETCH_ERROR, payload: 'The comics request was failed !' });
   }
 }

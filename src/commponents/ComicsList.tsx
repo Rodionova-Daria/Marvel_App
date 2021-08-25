@@ -8,11 +8,11 @@ import { useTypeSelector } from '../redux/hooks';
 
 const ComicsList: React.FC = () => {
   const size = '/portrait_fantastic.';
-  const { fetchComics, loading } = useTypeSelector((state) => state.comics);
+  const { comics, loading } = useTypeSelector((state) => state.comics);
 
   const errorHandlerComics = () => {
-    if (fetchComics.length && !loading) {
-      return fetchComics.map((comic) => {
+    if (comics.length && !loading) {
+      return comics.map((comic) => {
         const thumbnail = `${comic.thumbnail.path}${size}${comic.thumbnail.extension}`;
         return (
           <ComicsCard

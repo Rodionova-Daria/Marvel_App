@@ -28,17 +28,17 @@ export const HeroCard: React.FC<IProps> = (props: IProps) => {
   const { name, description, thumbnail, id, comics } = props;
   return (
     <Card className={classes.card}>
-      <Link to={`/commics/${id}`} className="link">
+      <Link to={`/comics/${id}`} className="link">
         <img src={thumbnail} alt="hero" className="thumbnail" />
       </Link>
       <CardContent>
         <Typography variant="h5">
-          <Link to={`/commics/${id}`} className="link">
+          <Link to={`/comics/${id}`} className="link">
             {name}
           </Link>
         </Typography>
         <Typography>{description}</Typography>
-        <Typography className={classes.comics}>Commics: {comics}</Typography>
+        <Typography className={classes.comics}>Comics: {comics}</Typography>
       </CardContent>
     </Card>
   );

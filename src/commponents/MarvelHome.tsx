@@ -1,27 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { IHero } from '../interfaces/Ihero';
 import { Header } from './Header';
-import Search from './Search';
 import { HeroList } from './HeroList';
 import Backdrop from '@material-ui/core/Backdrop';
 import { CircularProgress } from '@material-ui/core';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
-import Paginations from './Paginations';
 import { useActions, useTypeSelector } from '../redux/hooks';
 import { ErrorHandler } from './ErrorHandler';
+import Paginations from './Paginations';
+import Search from './Search';
+import '../css/style.css';
 
 type IProps = RouteComponentProps<{ location: string }>;
 
 const MarvelHome: React.FC<IProps> = (props: IProps) => {
-  const { fetchHeroes, loading, error } = useTypeSelector((state) => state.heroes);
-  const { fetchHeroSaga } = useActions();
+  const { heroes, loading, error } = useTypeSelector((state) => state.heroes);
+  const { fetchHero } = useActions();
   const history = useHistory();
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [searchField, setsearchField] = useState<string>('');
+  const [searchField, setSearchField] = useState<string>('');
   const [heroesPerPage] = useState<number>(8);
 
   useEffect(() => {
-    fetchHeroSaga(props.location.search);
+    fetchHero(0, heroesPerPage);
   }, []);
 
   useEffect(() => {
@@ -29,37 +28,25 @@ const MarvelHome: React.FC<IProps> = (props: IProps) => {
   }, [searchField]);
 
   const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setsearchField(e.target.value);
-  };
-
-  const searchHeroes = (posts: IHero[]): IHero[] => {
-    const search = searchField.toLowerCase();
-    return posts.filter((hero) => hero.name.toLowerCase().includes(search));
+    const name = e.target.value;
+    setSearchField(name);
+    if (name) {
+      fetchHero(0, heroesPerPage, name);
+    } else {
+      fetchHero(0, heroesPerPage);
+    }
   };
 
   const paginationHandleChange = (event: React.ChangeEvent<unknown>, page: number): void => {
-    setCurrentPage(page);
-  };
-
-  const checkOnPosts = (currentPosts: IHero[]): IHero[] => {
-    if (searchField === '') {
-      return searchHeroes(currentPosts);
-    } else {
-      return searchHeroes(fetchHeroes);
-    }
+    const offset = heroesPerPage * page - heroesPerPage;
+    fetchHero(offset, heroesPerPage);
   };
 
   const errorHandlerHeroes = () => {
     if (!loading && !error) {
       return (
         <>
-          <Search onSearchChange={onSearchChange} />
-          <HeroList heroes={filterHeroes} />
-          <Paginations
-            totalPosts={fetchHeroes.length}
-            handleChange={paginationHandleChange}
-            heroesPerPage={heroesPerPage}
-          />
+          <HeroList heroes={heroes} />
         </>
       );
     } else if (error) {
@@ -67,22 +54,21 @@ const MarvelHome: React.FC<IProps> = (props: IProps) => {
       return <ErrorHandler errorText={errorText} />;
     } else {
       return (
-        <Backdrop open invisible={true}>
-          <CircularProgress color="secondary" />
-        </Backdrop>
+        <div className="spiner">
+          <Backdrop open invisible={true}>
+            <CircularProgress color="secondary" />
+          </Backdrop>
+        </div>
       );
     }
   };
 
-  const indexOfLastPost = currentPage * heroesPerPage;
-  const indexOfFirstPost = indexOfLastPost - heroesPerPage;
-  const currentPosts = fetchHeroes.slice(indexOfFirstPost, indexOfLastPost);
-  const filterHeroes = checkOnPosts(currentPosts);
-
   return (
     <div>
       <Header />
+      <Search onSearchChange={onSearchChange} />
       {errorHandlerHeroes()}
+      <Paginations handleChange={paginationHandleChange} searchField={searchField} />;
     </div>
   );
 };

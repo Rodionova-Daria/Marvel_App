@@ -1,8 +1,8 @@
 import { IComics } from '../../interfaces/Icomics';
-import { FETCH_COMICS, FETCH_COMICS_SAGA, FETCH_COMICS_SUCCESS, FETCH_ERROR } from './Types';
+import { FETCH_COMICS, FETCH_COMICS_SUCCESS, FETCH_ERROR } from './Types';
 
 export interface ComicsState {
-  fetchComics: IComics[];
+  comics: IComics[];
   loading: boolean;
   error: null | string;
 }
@@ -17,7 +17,7 @@ interface FetchComicsSuccessAction {
 }
 
 export interface ComicsSagaAction {
-  type: typeof FETCH_COMICS_SAGA;
+  type: typeof FETCH_COMICS;
   payload: string;
 }
 

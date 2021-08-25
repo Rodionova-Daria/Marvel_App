@@ -2,7 +2,7 @@ import { ComicsAction, ComicsState } from '../types/ComicsActionsTypes';
 import { FETCH_COMICS, FETCH_ERROR, FETCH_COMICS_SUCCESS } from '../types/Types';
 
 const initialState: ComicsState = {
-  fetchComics: [],
+  comics: [],
   loading: false,
   error: null,
 };
@@ -12,21 +12,21 @@ export const comicsReducer = (state = initialState, action: ComicsAction): Comic
     case FETCH_COMICS:
       return {
         ...state,
-        fetchComics: [],
+        comics: [],
         loading: true,
         error: null,
       };
     case FETCH_COMICS_SUCCESS:
       return {
         ...state,
-        fetchComics: [...action.payload],
+        comics: [...action.payload],
         loading: false,
         error: null,
       };
     case FETCH_ERROR:
       return {
         ...state,
-        fetchComics: [],
+        comics: [],
         loading: false,
         error: action.payload,
       };

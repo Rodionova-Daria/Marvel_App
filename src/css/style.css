@@ -86,3 +86,7 @@ input[type="search"] {
 .error {
     color: red;
 }
+
+.spiner {
+    height: 100vh;
+}
