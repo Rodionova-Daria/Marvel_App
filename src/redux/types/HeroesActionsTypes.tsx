@@ -28,7 +28,7 @@ export interface HeroesSagaAction {
   payload: {
     offset: number;
     limit: number;
-    name?: string;
+    name: string | string[] | null;
   };
 }
 

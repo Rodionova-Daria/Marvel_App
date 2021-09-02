@@ -5,6 +5,7 @@ import { useActions, useTypeSelector } from '../redux/hooks';
 
 interface IProps {
   onSearchChange(e: React.ChangeEvent<HTMLInputElement>): void;
+  searchValue: string;
 }
 
 const Search: React.FC<IProps> = (props: IProps) => {
@@ -22,7 +23,12 @@ const Search: React.FC<IProps> = (props: IProps) => {
     <section className="search">
       <div className="container">
         <div className="search-bar">
-          <input type="search" placeholder="Enter the hero" onChange={props.onSearchChange} />
+          <input
+            type="search"
+            placeholder="Enter the hero"
+            onChange={props.onSearchChange}
+            value={props.searchValue}
+          />
           <a className="btn search-btn" onClick={sortByCommics}>
             Order By Number Of Comics
           </a>

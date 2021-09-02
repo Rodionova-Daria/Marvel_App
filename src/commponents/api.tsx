@@ -4,7 +4,11 @@ import { IComics } from '../interfaces/Icomics';
 
 const baseURL = 'https://gateway.marvel.com';
 
-async function getHeroes(offset: number, limit: number, name?: string): Promise<AxiosResponse> {
+async function getHeroes(
+  offset: number,
+  limit: number,
+  name: string | string[] | null
+): Promise<AxiosResponse> {
   const url = `${baseURL}:443/v1/public/characters?`;
   let params = {};
   if (name) {

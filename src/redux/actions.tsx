@@ -19,7 +19,11 @@ export function fetchCommics(id: string): ComicsSagaAction {
   };
 }
 
-export function fetchHero(offset: number, limit: number, name?: string): HeroesSagaAction {
+export function fetchHero(
+  offset: number,
+  limit: number,
+  name: string | string[] | null
+): HeroesSagaAction {
   return {
     type: FETCH_HEROES,
     payload: {
