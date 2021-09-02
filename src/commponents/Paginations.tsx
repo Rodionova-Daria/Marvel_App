@@ -3,7 +3,7 @@ import { Pagination } from '@material-ui/lab';
 import '../css/style.css';
 
 interface IProps {
-  searchField: string;
+  searchField: string | string[];
   handleChange(event: React.ChangeEvent<unknown>, page: number): void;
 }
 

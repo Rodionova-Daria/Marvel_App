@@ -3,7 +3,7 @@ import { Header } from './Header';
 import { HeroList } from './HeroList';
 import Backdrop from '@material-ui/core/Backdrop';
 import { CircularProgress } from '@material-ui/core';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
+import { RouteComponentProps, useHistory, useLocation } from 'react-router-dom';
 import { useActions, useTypeSelector } from '../redux/hooks';
 import { ErrorHandler } from './ErrorHandler';
 import Paginations from './Paginations';
@@ -17,26 +17,32 @@ const MarvelHome: React.FC<IProps> = (props: IProps) => {
   const { heroes, loading, error } = useTypeSelector((state) => state.heroes);
   const { fetchHero } = useActions();
   const history = useHistory();
-  const [searchField, setSearchField] = useState<string>('');
+  const location = useLocation();
+  // const [searchField, setSearchField] = useState<string>();
   const [heroesPerPage] = useState<number>(8);
-  const [nameUrl, setNameUrl] = useState<string | string[]>();
+  // const [nameUrl, setNameUrl] = useState<string | string[]>();
+  const parser = queryString.parse(history.location.search.substr(1));
+  const actualName = parser.name;
 
   useEffect(() => {
-    fetchHero(0, heroesPerPage, null);
+    fetchHero(0, heroesPerPage, actualName || null);
+    console.log('mount');
   }, []);
 
   useEffect(() => {
-    !searchField ? history.push('') : history.push(`/?name=${searchField}`);
-    const parser = queryString.parse(history.location.search.substr(1));
-    parser.name === undefined ? setNameUrl('') : setNameUrl(parser.name);
-  }, [searchField]);
+    if (history.action === 'POP' || location.pathname === '/') {
+      fetchHero(0, heroesPerPage, actualName || null);
+    }
+    console.log('update');
+  }, [location]);
 
   const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const name = e.target.value;
-    setSearchField(name);
-    if (nameUrl !== '') {
+    if (name) {
+      history.push(`/?name=${name}`);
       fetchHero(0, heroesPerPage, name);
     } else {
+      history.push('');
       fetchHero(0, heroesPerPage, null);
     }
   };
@@ -69,9 +75,9 @@ const MarvelHome: React.FC<IProps> = (props: IProps) => {
   return (
     <div>
       <Header />
-      <Search onSearchChange={onSearchChange} searchValue={searchField} />
+      <Search onSearchChange={onSearchChange} searchValue={actualName || ''} />
       {errorHandlerHeroes()}
-      <Paginations handleChange={paginationHandleChange} searchField={searchField} />;
+      <Paginations handleChange={paginationHandleChange} searchField={actualName || ''} />;
     </div>
   );
 };

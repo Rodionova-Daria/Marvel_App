@@ -5,7 +5,7 @@ import { useActions, useTypeSelector } from '../redux/hooks';
 
 interface IProps {
   onSearchChange(e: React.ChangeEvent<HTMLInputElement>): void;
-  searchValue: string;
+  searchValue: string | string[];
 }
 
 const Search: React.FC<IProps> = (props: IProps) => {
