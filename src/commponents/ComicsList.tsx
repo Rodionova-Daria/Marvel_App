@@ -11,7 +11,7 @@ const ComicsList: React.FC = () => {
   const { comics, loading } = useTypeSelector((state) => state.comics);
 
   const errorHandlerComics = () => {
-    if (comics.length && !loading) {
+    if (comics.length > 0) {
       return comics.map((comic) => {
         const thumbnail = `${comic.thumbnail.path}${size}${comic.thumbnail.extension}`;
         return (
@@ -24,16 +24,16 @@ const ComicsList: React.FC = () => {
           />
         );
       });
-    } else if (loading) {
+    }
+    if (loading) {
       return (
         <Backdrop open invisible={true}>
           <CircularProgress color="secondary" />
         </Backdrop>
       );
-    } else {
-      const errorText = 'There are no comics with this hero! Check another one...';
-      return <ErrorHandler errorText={errorText} />;
     }
+    const errorText = 'There are no comics with this hero! Check another one...';
+    return <ErrorHandler errorText={errorText} />;
   };
 
   return (

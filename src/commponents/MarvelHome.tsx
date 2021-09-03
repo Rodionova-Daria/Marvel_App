@@ -53,15 +53,10 @@ const MarvelHome: React.FC<IProps> = (props: IProps) => {
   };
 
   const errorHandlerHeroes = () => {
-    if (!loading && !error) {
-      return (
-        <>
-          <HeroList heroes={heroes} />
-        </>
-      );
-    } else if (error) {
+    if (error) {
       return <ErrorHandler errorText={error} />;
-    } else {
+    }
+    if (loading) {
       return (
         <div className="spiner">
           <Backdrop open invisible={true}>
@@ -70,6 +65,7 @@ const MarvelHome: React.FC<IProps> = (props: IProps) => {
         </div>
       );
     }
+    return <HeroList heroes={heroes} />;
   };
 
   return (
