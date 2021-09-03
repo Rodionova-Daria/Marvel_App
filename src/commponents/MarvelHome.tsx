@@ -18,22 +18,18 @@ const MarvelHome: React.FC<IProps> = (props: IProps) => {
   const { fetchHero } = useActions();
   const history = useHistory();
   const location = useLocation();
-  // const [searchField, setSearchField] = useState<string>();
   const [heroesPerPage] = useState<number>(8);
-  // const [nameUrl, setNameUrl] = useState<string | string[]>();
   const parser = queryString.parse(history.location.search.substr(1));
   const actualName = parser.name;
 
   useEffect(() => {
     fetchHero(0, heroesPerPage, actualName || null);
-    console.log('mount');
   }, []);
 
   useEffect(() => {
     if (history.action === 'POP' || location.pathname === '/') {
       fetchHero(0, heroesPerPage, actualName || null);
     }
-    console.log('update');
   }, [location]);
 
   const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
