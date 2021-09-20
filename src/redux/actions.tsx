@@ -1,34 +1,42 @@
-import { CommicsAction, CommicsSagaAction } from './types/CommicsActionsTypes';
+import { ComicsAction, ComicsSagaAction } from './types/ComicsActionsTypes';
 
 import { HeroesAction, HeroesSagaAction } from './types/HeroesActionsTypes';
 
 import { IHero } from '../interfaces/Ihero';
-import { ICommics } from '../interfaces/Icommics';
+import { IComics } from '../interfaces/Icomics';
 import {
-  FETCH_COMMICS_SAGA,
-  FETCH_COMMICS_SUCCESS,
-  FETCH_HEROES_SAGA,
+  FETCH_COMICS,
+  FETCH_COMICS_SUCCESS,
+  FETCH_HEROES,
   FETCH_HEROES_SUCCESS,
   SORT_HEROES,
 } from './types/Types';
 
-export function fetchCommicsSaga(id: string): CommicsSagaAction {
+export function fetchCommics(id: string): ComicsSagaAction {
   return {
-    type: FETCH_COMMICS_SAGA,
+    type: FETCH_COMICS,
     payload: id,
   };
 }
 
-export function fetchHeroSaga(search: string): HeroesSagaAction {
+export function fetchHero(
+  offset: number,
+  limit: number,
+  name: string | string[] | null
+): HeroesSagaAction {
   return {
-    type: FETCH_HEROES_SAGA,
-    payload: search,
+    type: FETCH_HEROES,
+    payload: {
+      offset,
+      limit,
+      name,
+    },
   };
 }
 
-export function fetchCommicsSuccesAction(payload: ICommics[]): CommicsAction {
+export function fetchCommicsSuccesAction(payload: IComics[]): ComicsAction {
   return {
-    type: FETCH_COMMICS_SUCCESS,
+    type: FETCH_COMICS_SUCCESS,
     payload,
   };
 }

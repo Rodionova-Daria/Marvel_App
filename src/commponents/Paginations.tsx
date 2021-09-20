@@ -3,26 +3,18 @@ import { Pagination } from '@material-ui/lab';
 import '../css/style.css';
 
 interface IProps {
-  heroesPerPage: number;
-  totalPosts: number;
+  searchField: string | string[];
   handleChange(event: React.ChangeEvent<unknown>, page: number): void;
 }
 
 const Paginations: React.FC<IProps> = (props: IProps) => {
-  const pageNumbers = [];
-
-  for (let i = 1; i <= Math.ceil(props.totalPosts / props.heroesPerPage); i++) {
-    pageNumbers.push(i);
+  let count = 3;
+  if (props.searchField) {
+    count = 1;
   }
-
   return (
     <div className="pagination">
-      <Pagination
-        key="num"
-        count={pageNumbers.length}
-        variant="outlined"
-        onChange={props.handleChange}
-      />
+      <Pagination key="num" count={count} variant="outlined" onChange={props.handleChange} />
     </div>
   );
 };

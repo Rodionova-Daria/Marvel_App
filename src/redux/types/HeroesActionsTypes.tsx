@@ -1,9 +1,9 @@
 import { IHero } from '../../interfaces/Ihero';
-import { FetchErrorAction } from './CommicsActionsTypes';
+import { FetchErrorAction } from './ComicsActionsTypes';
 import { FETCH_HEROES, FETCH_HEROES_SAGA, FETCH_HEROES_SUCCESS, SORT_HEROES } from './Types';
 
 export interface HeroesState {
-  fetchHeroes: IHero[];
+  heroes: IHero[];
   loading: boolean;
   error: null | string;
   heroesPerPage: number;
@@ -24,8 +24,12 @@ interface SortHeroesAction {
 }
 
 export interface HeroesSagaAction {
-  type: typeof FETCH_HEROES_SAGA;
-  payload: string;
+  type: typeof FETCH_HEROES;
+  payload: {
+    offset: number;
+    limit: number;
+    name: string | string[] | null;
+  };
 }
 
 export type HeroesAction =

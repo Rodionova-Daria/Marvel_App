@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
-import { commicsReducer } from './reducers/CommicsReducer';
+import { comicsReducer } from './reducers/ComicsReducer';
 import { heroesReducer } from './reducers/HeroesReducer';
 
 export const rootReducer = combineReducers({
-  commics: commicsReducer,
+  comics: comicsReducer,
   heroes: heroesReducer,
 });
 

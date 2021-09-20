@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Commics from './Commics';
+import Comics from './Comics';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { PageNotFound } from './PageNotFound';
 import MarvelHome from './MarvelHome';
@@ -11,7 +11,7 @@ class App extends Component {
         <Router>
           <Switch>
             <Route path="/" exact component={MarvelHome} />
-            <Route path="/commics/:id" component={Commics} />
+            <Route path="/comics/:id" component={Comics} />
             <Route component={PageNotFound} />
           </Switch>
         </Router>

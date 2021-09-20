@@ -1,100 +1,77 @@
-import React, { Component } from 'react';
-import { IHero } from '../interfaces/Ihero';
+import React, { useEffect, useState } from 'react';
 import { Header } from './Header';
-import Search from './Search';
 import { HeroList } from './HeroList';
 import Backdrop from '@material-ui/core/Backdrop';
 import { CircularProgress } from '@material-ui/core';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, useHistory, useLocation } from 'react-router-dom';
+import { useActions, useTypeSelector } from '../redux/hooks';
+import { ErrorHandler } from './ErrorHandler';
 import Paginations from './Paginations';
-import { RootState } from '../redux/rootReducer';
-import { connect, ConnectedProps } from 'react-redux';
-import { fetchHeroSaga } from '../redux/actions';
+import Search from './Search';
+import '../css/style.css';
+import * as queryString from 'querystring';
 
-type IProps = RouteComponentProps<{ location: string }> & PropsFromRedux;
+type IProps = RouteComponentProps<{ location: string }>;
 
-interface IState {
-  currentPage: number;
-  searchField: string;
-  heroesPerPage: number;
-}
+const MarvelHome: React.FC<IProps> = (props: IProps) => {
+  const { heroes, loading, error } = useTypeSelector((state) => state.heroes);
+  const { fetchHero } = useActions();
+  const history = useHistory();
+  const location = useLocation();
+  const [heroesPerPage] = useState<number>(8);
+  const parser = queryString.parse(history.location.search.substr(1));
+  const actualName = parser.name;
 
-class MarvelHome extends Component<IProps, IState> {
-  constructor(props: IProps) {
-    super(props);
+  useEffect(() => {
+    fetchHero(0, heroesPerPage, actualName || null);
+  }, []);
 
-    this.state = {
-      currentPage: 1,
-      searchField: '',
-      heroesPerPage: 4,
-    };
-
-    this.filterHeroes = this.filterHeroes.bind(this);
-    this.paginationHandleChange = this.paginationHandleChange.bind(this);
-    this.onSearchChange = this.onSearchChange.bind(this);
-  }
-
-  async componentDidMount(): Promise<void> {
-    await this.props.fetchHeroSaga(this.props.location.search);
-  }
-
-  onSearchChange(e: React.ChangeEvent<HTMLInputElement>): void {
-    this.setState({ searchField: e.target.value });
-  }
-
-  filterHeroes(posts: IHero[]): IHero[] {
-    const searchField = this.state.searchField.toLowerCase();
-    return posts.filter((hero) => hero.name.toLowerCase().includes(searchField));
-  }
-
-  paginationHandleChange(event: React.ChangeEvent<unknown>, page: number): void {
-    this.setState({ currentPage: page });
-  }
-
-  checkOnPosts(currentPosts: IHero[]): IHero[] {
-    if (this.state.searchField === '') {
-      return this.filterHeroes(currentPosts);
-    } else {
-      return this.filterHeroes(this.props.heroes);
+  useEffect(() => {
+    if (history.action === 'POP' || location.pathname === '/') {
+      fetchHero(0, heroesPerPage, actualName || null);
     }
-  }
+  }, [location]);
 
-  render(): React.ReactNode {
-    const indexOfLastPost = this.state.currentPage * this.state.heroesPerPage;
-    const indexOfFirstPost = indexOfLastPost - this.state.heroesPerPage;
-    const currentPosts = this.props.heroes.slice(indexOfFirstPost, indexOfLastPost);
-    const filterHeroes = this.checkOnPosts(currentPosts);
-    return (
-      <div>
-        <Header />
-        {!this.props.loading ? (
-          <>
-            <Search onSearchChange={this.onSearchChange} />
-            <HeroList heroes={filterHeroes} />
-            <Paginations
-              heroesPerPage={this.state.heroesPerPage}
-              totalPosts={this.props.heroes.length}
-              handleChange={this.paginationHandleChange}
-            />
-          </>
-        ) : (
+  const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const name = e.target.value;
+    if (name) {
+      history.push(`/?name=${name}`);
+      fetchHero(0, heroesPerPage, name);
+    } else {
+      history.push('');
+      fetchHero(0, heroesPerPage, null);
+    }
+  };
+
+  const paginationHandleChange = (event: React.ChangeEvent<unknown>, page: number): void => {
+    const offset = heroesPerPage * page - heroesPerPage;
+    fetchHero(offset, heroesPerPage, null);
+  };
+
+  const errorHandlerHeroes = () => {
+    if (error) {
+      return <ErrorHandler errorText={error} />;
+    }
+    if (loading) {
+      return (
+        <div className="spiner">
           <Backdrop open invisible={true}>
             <CircularProgress color="secondary" />
           </Backdrop>
-        )}
-      </div>
-    );
-  }
-}
-
-const mapStateToProps = (state: RootState) => {
-  return {
-    heroes: state.heroes.fetchHeroes,
-    loading: state.heroes.loading,
+        </div>
+      );
+    }
+    return <HeroList heroes={heroes} />;
   };
+
+  return (
+    <div>
+      <Header />
+      <Search onSearchChange={onSearchChange} searchValue={actualName || ''} />
+      {errorHandlerHeroes()}
+      <Paginations handleChange={paginationHandleChange} searchField={actualName || ''} />;
+    </div>
+  );
 };
 
-const connector = connect(mapStateToProps, { fetchHeroSaga });
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-export default connector(MarvelHome);
+export default MarvelHome;
